@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import { encryptPassword } from '../utils/encryption.js'
 
 const userSchema = mongoose.Schema({
     username: {
