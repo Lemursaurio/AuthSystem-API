@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import http from 'http'
 import userRoutes from './routes/userRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 import connectDB from './database/connection.js'
 
 const app = express()
@@ -10,6 +11,7 @@ dotenv.config()
 
 connectDB()
 
+app.use('/', authRoutes)
 app.use('/', userRoutes)
 
 const server = http.createServer(app)

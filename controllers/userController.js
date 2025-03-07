@@ -1,13 +1,4 @@
-import { loginUser, registerUser } from '../services/userService.js'
-
-export async function createUser(req, res) {
-    try {
-        const newUser = await registerUser(req.body)
-        res.status(201).json({ message: 'Usuario creado exitosamente', newUser }) 
-    } catch (error) {
-        res.status(400).json({ error: error.message })
-    }
-}
+import { loginUser } from '../services/userService.js'
 
 export async function logUser(req, res) {
     try {

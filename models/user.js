@@ -38,6 +38,21 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    isVerified: {
+        type: Boolean,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    expiresAt: {
+        type: Date,
+        default: function () {
+            return new Date(Date.now() + 1000 * 300)
+        },
+        expires: '5m'
     }
 })
 
