@@ -1,5 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import http from 'http'
+import userRoutes from './routes/userRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 import connectDB from './database/connection.js'
 
 import habitacionRoutes from './routes/habitacionesRoutes.js'
@@ -9,20 +12,22 @@ const app = express()
 
 // middleware
 app.use(express.json());
+dotenv.config();
 
+connectDB()
 
 // rutas 
 app.use("/habitaciones", habitacionRoutes);
 app.use("/reservas", reservasRoutes );
 app.use("/ocupar", ocuparRoutes );
+app.use('/', authRoutes)
+app.use('/', userRoutes)
 
-dotenv.config();
+const server = http.createServer(app)
 
-connectDB();
+const PORT = process.env.PORT || 8080
 
-// Puerto del servidor
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+server.listen(PORT, () => {
+    console.log(`Server http iniciado en: http://localhost:${PORT}`)
+})
 
