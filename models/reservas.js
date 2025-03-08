@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const ReservaSchema = new mongoose.Schema({
 
     habitacion:{
@@ -17,8 +16,8 @@ const ReservaSchema = new mongoose.Schema({
     },
     estado:{
         type: String, 
-        enum:['OCUPADO','RESERVADO','LIBRE'],
-        default:'LIBRE',
+        enum:['RESERVADO','OCUPADO','CANCELADO'],
+        default:'RESERVADO',
     }
 })
 

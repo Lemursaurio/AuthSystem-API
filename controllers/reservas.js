@@ -26,44 +26,45 @@ class reservasController{
     async crearReserva(req,res){
         try{
 
-            const {fecha_inicio, fecha_salida, estado, habitacion} = req.body;
+            const {fecha_inicio, fecha_salida, habitacion} = req.body;
 
             // validar si la habitacion existe
             const existenciahabitacion = await Habitacion.findById(habitacion);
             if(!existenciahabitacion) 
                 {return res.status(404).json({message:'habitacion no existe'})
             }
+
             // validar que las fechas sean coherentes
             if( new Date(fecha_inicio) >=  new Date(fecha_salida)){
                 return res.status(400).json({message: 'la fecha de inicio debe ser menor a la de la salida'})
             }
 
+            // validar que la habitacion este disponible en dichas fechas
+            const reservasExistentes = await Reserva.find({
+                Habitacion,
+                estado: {$in:['RESERVADO','OCUPADO']}, 
+                $or:[
+                    {
+                        fecha_inicio: { $lt: new Date(fecha_salida) }, 
+                        fecha_salida: { $gt: new Date(fecha_inicio) }
+                    }
+                ]
+            })
+            if(reservasExistentes.length > 0){
+                return res.status(400).json({message:'la habitacion no esta disponible para las fechas solicitadas'})
+            }
+
             // crear la nueva reserva
-            const newReserva = new Reserva({fecha_inicio, fecha_salida,estado,habitacion});
+            const newReserva = new Reserva({habitacion, fecha_inicio, fecha_salida, estado:'RESERVADO',});
+
             await newReserva.save();
+
             res.status(201).json({message:'se creo una reserva', Reserva: newReserva})
         }catch(e){
             res.status(500).json({message:'error en crear reserva', error:e.message})
         }
     }
-    async gestionarReserva(req,res){
-        try{
-            const {fecha_inicio,fecha_salida,estado,habitacion}= req.body;
-            // validar si existe reserva
-           // const existeReserva = await Reserva.findById(Reserva)
-
-            const cambiarRerserva = await Reserva.findByIdAndUpdate(req.params.id, {
-                fecha_inicio, fecha_salida,estado,habitacion
-            },{
-                new:true, runValidators:true
-            });
-
-            if(!cambiarRerserva) return res.status(404).json({message:'reserva no encontrada'});
-            res.status(200).json({message:'reserva cambiada', Reserva: cambiarRerserva})
-        }catch(e){
-            res.status(500).json({message:'error en cambiar reserva', error:e.message})
-        }
-    }
+    
     async cancelarReserva(req,res){
         try{
             const eliminarReserva = await Reserva.findByIdAndDelete(req.params.id);
@@ -73,7 +74,7 @@ class reservasController{
         }
     }
 
-
+    
 
 
 }

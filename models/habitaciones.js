@@ -5,7 +5,7 @@ const HabitacionSchema = new mongoose.Schema({
     numero:{
         type:Number,
         required:true,
-
+        unique: true,
     },
     piso:{
         type:Number,
@@ -21,8 +21,8 @@ const HabitacionSchema = new mongoose.Schema({
     },
     estado:{
         type: String, 
-        enum:['OCUPADO','RESERVADO','LIBRE'],
-        default:'LIBRE',
+        enum:['OCUPADO','DISPONIBLE'],
+        default:'DISPONIBLE',
     },
     camas:{
         type:Number,

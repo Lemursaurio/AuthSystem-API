@@ -10,7 +10,6 @@ const routes = express.Router();
 routes.get('/', reservaController.verReservas);
 routes.get('/:id', reservaController.buscarReserva);
 routes.post('/', reservaController.crearReserva);
-routes.put('/:id', reservaController.gestionarReserva);
 routes.delete('/:id', reservaController.cancelarReserva);
 
 export default routes;
