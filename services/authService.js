@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import { compareData, hashData } from '../utils/encryption.js' 
 import { sendResetEmail, sendVerificationEmail } from '../utils/nodemailer.js'
 
-import { createUser, findUserByEmail, findUserByUsername, updateUserPassword, verifyUserById } from '../repositories/userRepository.js'
+import { createUser, findUserById, findUserByEmail, findUserByUsername, updateUserPassword, verifyUserById } from '../repositories/userRepository.js'
 import { createToken, deleteToken, findTokenByUserId } from '../repositories/tokenRepository.js'
 
 
@@ -14,7 +14,7 @@ export async function registerUser(userData) {
     // Verificar si el usuario ya está registrado por nombre de usuario y email
     if (userByUsername) {
         if (userByUsername.isVerified) {
-            throw new Error('Ya existe una cuenta con ese nombre de usuario.')
+            throw new Error('Ya existe una cuenta con ese nombre de usuario')
         } else {
             throw new Error('Se envió un correo para verificar un usuario con esas credenciales, inténtelo más tarde')
         }    
@@ -22,7 +22,7 @@ export async function registerUser(userData) {
 
     if (userByEmail) {       
         if (userByEmail.isVerified) {
-            throw new Error('Ya existe una cuenta con ese email.')
+            throw new Error('Ya existe una cuenta con ese email')
         } else {
             throw new Error('Se envió un correo para verificar un usuario con esas credenciales, inténtelo más tarde')
         }  
@@ -118,15 +118,16 @@ async function createLink(userId, linkType) {
 
     await createToken(newToken)
 
-    const link = `https://frontend.com/${linkType}?token=${token}&id=${userId}`
+    const link = `${process.env.FRONT_URL}/${linkType}?token=${token}&id=${userId}`
 
     return link
 }
 
 async function verifyTokenFromLink(token, linkType, userId) {
     const foundToken = await findTokenByUserId(userId)
+    const foundUser = await findUserById(userId)
 
-    if (!foundToken) {
+    if (!foundToken || !foundUser) {
         throw new Error('El token adjuntado al enlace o el usuario ya no son válidos')
     }
 

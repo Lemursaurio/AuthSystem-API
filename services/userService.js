@@ -14,6 +14,10 @@ export async function loginUser(loginData) {
         foundUser = await findUserByUsername(credential)
     }
 
+    if (!foundUser.isVerified) {
+        throw new Error('Ese usuario no está verificado')
+    }
+
     if (!foundUser) {
         throw new Error('No se encontró un usuario con esas credenciales')
     }

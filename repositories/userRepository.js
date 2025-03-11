@@ -4,6 +4,10 @@ export async function createUser(data) {
     return await User.create(data)
 }
 
+export async function findUserById(id) {
+    return await User.findOne({ _id: id })
+}
+
 export async function findUserByUsername(username) {
     return await User.findOne({ username: username })
 }
