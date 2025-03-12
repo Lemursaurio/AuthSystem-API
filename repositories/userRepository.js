@@ -8,8 +8,8 @@ export async function findUserById(id) {
     return await User.findOne({ _id: id })
 }
 
-export async function findUserByUsername(username) {
-    return await User.findOne({ username: username })
+export async function findUserByDocNumber(doc_type, doc_number) {
+    return await User.findOne({ doc_type: doc_type, doc_number: doc_number })
 }
 
 export async function findUserByEmail(email) {

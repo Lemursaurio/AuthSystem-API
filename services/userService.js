@@ -1,4 +1,4 @@
-import { findUserByEmail, findUserByUsername } from '../repositories/userRepository.js'
+import { findUserByEmail, findUserByDocNumber } from '../repositories/userRepository.js'
 import { compareData } from '../utils/encryption.js'
 import { createToken } from '../utils/jwt.js'
 
@@ -7,19 +7,23 @@ export async function loginUser(loginData) {
 
     let foundUser
 
-    // Busca el usuario usando el método de logeo elegido (email o username)
+    // Busca el usuario usando el método de logeo elegido (email o número de documento [dni, extranjeria])
     if (loginMethod === 'email') {
         foundUser = await findUserByEmail(credential)
-    } else {
-        foundUser = await findUserByUsername(credential)
     }
-
-    if (!foundUser.isVerified) {
-        throw new Error('Ese usuario no está verificado')
+    if (loginMethod === 'dni') {
+        foundUser = await findUserByDocNumber(loginMethod, credential)
+    } 
+    if (loginMethod === 'carne_extranjeria') {
+        foundUser = await findUserByDocNumber(loginMethod, credential)
     }
 
     if (!foundUser) {
         throw new Error('No se encontró un usuario con esas credenciales')
+    }
+
+    if (!foundUser.isVerified) {
+        throw new Error('Ese usuario no está verificado')
     }
 
     // Comparar la contraseña usando bcrypt
