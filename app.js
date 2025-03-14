@@ -1,6 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import http from 'http'
+import cors from 'cors'
+
 import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import connectDB from './database/connection.js'
@@ -11,15 +13,17 @@ import ocuparRoutes from './routes/ocuparRoutes.js'
 const app = express()
 
 // middleware
-app.use(express.json());
-dotenv.config();
+app.use(express.json())
+app.use(cors())
+
+dotenv.config()
 
 connectDB()
 
 // rutas 
-app.use("/habitaciones", habitacionRoutes);
-app.use("/reservas", reservasRoutes );
-app.use("/ocupar", ocuparRoutes );
+app.use("/habitaciones", habitacionRoutes)
+app.use("/reservas", reservasRoutes )
+app.use("/ocupar", ocuparRoutes )
 app.use('/', authRoutes)
 app.use('/', userRoutes)
 
