@@ -1,6 +1,6 @@
 import Reserva from '../models/reservas.js';
 import Habitacion from "../models/habitaciones.js";
-
+import User from '../models/user.js';
 
 class reservasController{
     constructor(){
@@ -26,7 +26,7 @@ class reservasController{
     async crearReserva(req,res){
         try{
 
-            const {fecha_inicio, fecha_salida, habitacion} = req.body;
+            const {fecha_inicio, fecha_salida, habitacion,user} = req.body;
 
             // validar si la habitacion existe
             const existenciahabitacion = await Habitacion.findById(habitacion);
@@ -55,7 +55,7 @@ class reservasController{
             }
 
             // crear la nueva reserva
-            const newReserva = new Reserva({habitacion, fecha_inicio, fecha_salida, estado:'RESERVADO',});
+            const newReserva = new Reserva({user, habitacion, fecha_inicio, fecha_salida, estado:'RESERVADO',});
 
             await newReserva.save();
 
