@@ -6,6 +6,11 @@ const ReservaSchema = new mongoose.Schema({
         ref:'Habitacion',
         required: true,
     },
+    user:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'User',
+      required:true,  
+    },
     fecha_inicio:{
         type:Date,
         required:true,
